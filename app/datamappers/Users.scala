@@ -63,6 +63,12 @@ object Users{
 			"DELETE FROM users WHERE user_name = ?",
 			user
 		)
+
+		Db.session.execute(
+			"DELETE FROM user_scores WHERE user_name = ?",
+			user
+		)
+
 	}
 
 	def getUserOfTokens():List[(String,String)] = {
