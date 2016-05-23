@@ -1,0 +1,33 @@
+@(otherScores:List[(String,String)], missingUsers:List[String], winnerScore:String, team1:String, team2:String, winSize:Double, reportSize:Int)
+<h3>Toate pariurile pt jocul: <b>@team1.capitalize - @team2.capitalize (@winnerScore)</b></h3>
+<table class="tbl" class="display">
+    <thead>
+        <tr>
+            <td>Who</td>
+            <td>Score</td>
+            <td>Status</td>
+        </tr>
+    </thead>
+    <tbody>
+        @for(score <- otherScores) {
+            <tr>
+                <td>@score._1</td>
+                <td>@score._2</td>
+                <td>
+                    @if(winnerScore == score._2){<font color="green">WINNER (+@winSize RON)</font>}
+                    @if(winnerScore != score._2){<font color="red">LOOSER! (-1 RON)</font>}
+                </td>
+            </tr>
+        }
+        @for(usr <- missingUsers) {
+            <tr>
+                <td>@usr</td>
+                <td>-</td>
+                <td><font color="red">A uitat sa parieze (-1 RON)</font></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="alert alert-info" role="alert">
+    Se strang pentru castigul final <b>@reportSize RON</b>
+</div>

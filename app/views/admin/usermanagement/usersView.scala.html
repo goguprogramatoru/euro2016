@@ -1,0 +1,19 @@
+@(users:List[String])
+User list:
+<table border="1">
+    <tr>
+        <td>Username</td>
+        <td>Action</td>
+    </tr>
+    @for(user <- users) {
+        <tr>
+           <td>@user</td>
+           @if(user!="admin") {
+               <td><a href="@routes.Admin.deleteUser(user)">Delete</a></td>
+           }else {
+               <td>&nbsp;</td>
+           }
+        </tr>
+    }
+</table>
+<br>To create a new user, you need to generate an access token

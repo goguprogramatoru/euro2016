@@ -1,0 +1,58 @@
+@(teamList:List[String])
+<form method="post">
+    <table>
+        <tr>
+            <td>
+                Game key
+            </td>
+            <td>
+                <input type="text" name="in_key">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Date
+            </td>
+            <td>
+                <input type="text" name="in_date">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Step
+            </td>
+            <td>
+                <input type="text" name="in_step">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Team 1
+            </td>
+            <td>
+                <select name="in_team1">
+                    @for(team <- teamList) {
+                        <option value="@team">@team</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Team 2
+            </td>
+            <td>
+                <select name="in_team2">
+                    @for(team <- teamList) {
+                        <option value="@team">@team</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit">
+            </td>
+        </tr>
+    </table>
+</form>

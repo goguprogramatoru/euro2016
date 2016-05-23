@@ -1,0 +1,45 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                    controllers.User.index
+
+GET     /admin                               controllers.Admin.index
+GET     /token/create                        controllers.Admin.createTokenInputPage
+POST    /token/create                        controllers.Admin.createTokenResultPage
+GET     /admin/users                         controllers.Admin.viewUsers
+GET     /admin/user/delete/:user             controllers.Admin.deleteUser(user:String)
+GET     /admin/token/view                    controllers.Admin.viewTokens
+GET     /admin/token/delete/:user            controllers.Admin.deleteToken(user:String)
+GET     /admin/games/view                    controllers.Admin.viewGames
+GET     /admin/games/add                     controllers.Admin.addGameInputPage
+POST    /admin/games/add                     controllers.Admin.addGame
+GET     /admin/games/delete/:gameKey         controllers.Admin.deleteGame(gameKey:String)
+GET     /admin/games/setScore/:gameKey       controllers.Admin.setGameScoreInputPage(gameKey:String)
+POST    /admin/games/setScore/:gameKey       controllers.Admin.setGameScore(gameKey:String)
+GET     /admin/viewSettings                  controllers.Admin.viewSettings()
+GET     /admin/setValue/:key                 controllers.Admin.changeSettingInputPage(key:String)
+POST    /admin/setValue/:key                 controllers.Admin.changeSetting(key:String)
+
+GET     /login                               controllers.Common.loginPage()
+POST    /login                               controllers.Common.loginHandler()
+GET     /logout                              controllers.Common.logout()
+
+GET     /user/create/:user/:token            controllers.Common.createUserInput(user:String, token:String)
+POST    /user/create/:user/:token            controllers.Common.createUserOutput(user:String, token:String)
+
+GET     /winningTeam                         controllers.User.winningTeamInterface
+GET     /winningTeam/set                     controllers.User.setWinningTeamInterface
+POST    /winningTeam/set                     controllers.User.setWinningTeam
+GET     /myScores                            controllers.User.myScores
+GET     /myScores/setScore/:gameKey          controllers.User.setGameScoreInputPage(gameKey:String)
+POST    /myScores/setScore/:gameKey          controllers.User.setGameScore(gameKey:String)
+GET     /myScores/game/:gameKey              controllers.User.otherPeopleScores(gameKey:String)
+GET     /stats                               controllers.User.stats
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                        controllers.Assets.at(path="/public", file)
+
+    

@@ -1,0 +1,12 @@
+@(teams:List[String])
+Selecteaza echipa care va castiga campionatul:
+<form method="post" id="frm">
+    @for(team <- teams) {
+        <a href="#" class="btn btn-default team-select" id="btn@team" style="width: 150px; margin:10px">
+            @team
+            <img id="btnimg@team" src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(team))"/>
+        </a>
+
+    }
+    <input type="hidden" name="in_team" id="in_team"/>
+</form>

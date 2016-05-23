@@ -1,0 +1,29 @@
+@(gameList:List[models.Game])
+<table border="1">
+    <tr>
+        <td>Key</td>
+        <td>Date</td>
+        <td>Step</td>
+        <td>Team1</td>
+        <td>Team2</td>
+        <td>Team1 Score</td>
+        <td>Team2 Score</td>
+        <td>Actions</td>
+    </tr>
+    @for(game <- gameList) {
+        <tr>
+            <td>@game.key</td>
+            <td>@game.date</td>
+            <td>@game.step</td>
+            <td>@game.team1</td>
+            <td>@game.team2</td>
+            <td>@game.team1Score</td>
+            <td>@game.team2Score</td>
+            <td>
+                <a href="@routes.Admin.setGameScoreInputPage(game.key)">Set final score</a>
+                <a href="@routes.Admin.deleteGame(game.key)">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+<a href="@routes.Admin.addGameInputPage()">Add game</a>

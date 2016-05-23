@@ -1,0 +1,36 @@
+@(allUsers:List[String], allGames:List[models.Game], pivot:Map[String,Map[String,Double]])
+
+<table class="tbl" class="display">
+    <thead>
+        <tr>
+            <td>Game</td>
+            @for(user <- allUsers){
+                <td>@user</td>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @for(game <- allGames){
+            <tr>
+                <td>
+                    @game.team1 - @game.team2
+                </td>
+                @for(user <- allUsers){
+                    <td style="background-color:
+                        @{
+                            val x = pivot.get(game.key).get.getOrElse(user,0.0)
+                            if(x>0){
+                                "#eaffea"
+                            }
+                            else {
+                                "#ffeaea"
+                            }
+                        }
+                    ">
+                        @pivot.get(game.key).get.getOrElse(user,0.0)
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

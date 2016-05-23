@@ -1,0 +1,23 @@
+@(team1:String, team2:String)
+<form method="post">
+    <h3>Seteaza scorul meciului</h3>
+    <div class="col-md-12">
+        <div class="form-group col-md-6">
+            <label for="in_team1_score" class="col-xs-4">
+                <img src="@routes.Assets.at("images/flags/" + models.Countries.getPicturePath(team1))"/>
+                @team1.capitalize
+            </label>
+            <input type="number" name="in_team1_score" id="in_team1_score" class="form-control col-xs-8" placeholder="0" required autofocus>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="in_team1_score" class="col-xs-4">
+                <img src="@routes.Assets.at("images/flags/" + models.Countries.getPicturePath(team2))"/>
+                @team2.capitalize
+            </label>
+            <input type="number" name="in_team2_score" class="form-control col-xs-8" placeholder="0" required>
+        </div>
+    </div>
+    <div class="form-group col-md-12">
+        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save">
+    </div>
+</form>

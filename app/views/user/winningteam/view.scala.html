@@ -1,0 +1,65 @@
+@(winningTeam:String, eta:String, expired:Boolean, winningTeams:List[(String,String)])
+
+
+
+
+@if(winningTeam==null){
+    <div class="alert alert-danger" role="alert">
+        Nu ai setat echipa care va castiga campionatul!
+    </div>
+}
+
+@if(winningTeam!=null){
+    <div class="bs-callout-danger bs-callout">
+        <h4>
+            Pariez pe
+            <b>@winningTeam.capitalize</b>
+            <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(winningTeam))"/>
+            ca va castiga campionatul.
+        </h4>
+    </div>
+    @if(expired==true){
+        <div class="alert alert-danger" role="alert">
+            Eta-ul (@eta) a expirat. Nu mai poti alege o alta echipa
+        </div>
+    }
+}
+
+@if(expired==false) {
+    <div class="alert alert-warning" role="alert">
+        <a role="button" class="btn btn-warning" href="@routes.User.setWinningTeamInterface()">Schimba echipa</a>
+        Ultima schimbare: @eta
+    </div>
+
+}
+@if(expired==false){
+    <div class="alert alert-info" role="alert">Dupa expirarea eta-ului o sa poti vedea ce au ales ceilalti.</div>
+}
+@if(expired==true){
+    <table class="tbl" class="display">
+        <thead>
+            <tr>
+                <td>Cine</td>
+                <td>Echipa</td>
+            </tr>
+        </thead>
+        <tbody>
+            @for(wt <- winningTeams) {
+                <tr>
+                    <td>
+                        @wt._1
+                    </td>
+                    <td>
+                        @if(wt._2 != null){
+                            <img src="@routes.Assets.at("images/flags/" + models.Countries.getPicturePath(wt._2))"/>
+                            @wt._2
+                        }
+                        @if(wt._2 == null){
+                            Echipa nu a fost aleasa
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

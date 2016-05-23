@@ -1,0 +1,70 @@
+@(allGames:List[models.Game], myScores:Map[String,String])
+<div class="alert alert-warning" role="alert">
+    Atentie! Eta-ul pt setarea scorurilor: 10 minute inaintea meciului<br>
+</div>
+<div class="alert alert-warning" role="alert">
+    Atentie! Chiar daca uiti sa setezi scorul, trebuie sa platesti
+</div>
+<table class="tbl display">
+    <thead>
+        <tr>
+            <td>
+                Data
+            </td>
+            <td>
+                Etapa
+            </td>
+            <td>
+                Echipe
+            </td>
+            <td>
+                Scorul meu
+            </td>
+            <td>
+                Scor final
+            </td>
+            <td>
+                Actiune
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        @for(game <- allGames){
+            <tr>
+                <td>
+                    @game.date
+                </td>
+                <td>
+                    @game.step.capitalize
+                </td>
+                <td>
+                    <img src="@routes.Assets.at("images/flags/" + models.Countries.getPicturePath(game.team1))"/>
+                    -
+                    <img src="@routes.Assets.at("images/flags/" + models.Countries.getPicturePath(game.team2))"/>
+                    @game.team1.capitalize
+                    -
+                    @game.team2.capitalize
+                </td>
+                <td>
+                    @myScores.getOrElse(game.key,"-")
+                </td>
+                <td>
+                    @if(game.team1Score == -1){
+                        ?
+                    }
+                    @if(game.team1Score != -1) {
+                        @game.team1Score - @game.team2Score
+                    }
+                </td>
+                <td>
+                    @if(!tools.Date.isExpired(game.date)){
+                        <a role="button" class="btn btn-warning" href="@routes.User.setGameScoreInputPage(game.key)">Seteaza scor</a>
+                    }
+                    @if(tools.Date.isExpired(game.date)){
+                        <a role="button" class="btn btn-info"  href="@routes.User.otherPeopleScores(game.key)">Info</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

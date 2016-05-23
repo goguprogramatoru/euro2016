@@ -1,0 +1,27 @@
+@(team1:String, team2:String)
+-1 = game not started yet
+<form method="post">
+    <table>
+        <tr>
+            <td>
+                @team1
+            </td>
+            <td>
+                <input type="number" name="in_team1_score">
+            </td>
+        </tr>
+        <tr>
+            <td>
+            @team2
+            </td>
+            <td>
+                <input type="number" name="in_team2_score">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit">
+            </td>
+        </tr>
+    </table>
+</form>
