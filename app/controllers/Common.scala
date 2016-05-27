@@ -30,8 +30,8 @@ object Common extends Controller{
 		)(CreateUserData.apply)(CreateUserData.unapply)
 	)
 
-	def loginPage() = Action{request =>
-
+	def loginPage() = Action{
+		implicit request =>
 		var attempts = request.session.get("failedAttempts").getOrElse("0").toInt
 		Ok(views.html.common.login(attempts))
 	}
@@ -66,7 +66,9 @@ object Common extends Controller{
 							Thread.sleep(5000)
 						}
 						attempts += 1
-						Redirect(routes.Common.loginPage()).withSession("failedAttempts" -> attempts.toString)
+						Redirect(routes.Common.loginPage())
+							.flashing("loginFail" -> "true")
+								.withSession("failedAttempts" -> attempts.toString)
 					}
 				}
 			)

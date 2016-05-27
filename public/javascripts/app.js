@@ -9,7 +9,19 @@ $( document ).ready(function() {
         }
     );
 
-    $( ".team-select" ).click(function() {
+    $('.tblMyScores').DataTable(
+        {
+            paging: false,
+            info: true,
+            "scrollX": false,
+            "scrollY": 500,
+            "order": [[ 0, "desc" ]]
+        }
+    );
+
+
+
+    $( ".team-select" ).click(function(event) {
         var team = event.target.id.replace("btnimg","").replace("btn","");
         $( "#in_team").val(
             team
