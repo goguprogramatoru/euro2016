@@ -1,23 +1,32 @@
 @(teamList:List[String])
-<form method="post">
+<div class="alert alert-danger hidden" role="alert" id="error_message">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+    Enter a valid email address
+</div>
+<form method="post" class="addGameForm">
     <label for="in_key">ex: ro-fr</label>
     <input type="text" name="in_key" id="in_key" class="form-control" placeholder="key" required autofocus>
     <label for="in_date">Date</label>
     <input type="text" name="in_date" id="in_date" class="form-control" placeholder="YYYY-MM-DD hh:mm:ss" required autofocus>
     <label for="in_step">Step</label>
     <input type="text" name="in_step" id="in_step" class="form-control" placeholder="ex: Group A" required autofocus>
-    <label for="in_team1">Team 1</label>
-    <select name="in_team1" class="form-control">
+    <div class="form-group" id="in_team1_group">
+        <label for="in_team1" class="control-label">Team 1</label>
+        <select name="in_team1" id="in_team1" class="form-control">
+            @for(team <- teamList) {
+                <option value="@team">@team.capitalize</option>
+            }
+        </select>
+    </div>
+    <div class="form-group" id="in_team2_group">
+        <label for="in_team2" id="in_team2_label" class="control-label" >Team 2</label>
+        <select name="in_team2" id="in_team2" class="form-control">
         @for(team <- teamList) {
-            <option value="@team">@team</option>
+            <option value="@team">@team.capitalize</option>
         }
-    </select>
-    <label for="in_team2">Team 1</label>
-    <select name="in_team2" class="form-control">
-    @for(team <- teamList) {
-        <option value="@team">@team</option>
-    }
-    </select>
+        </select>
+    </div>
     <br>
     <input class="btn btn-primary btn-block" type="submit" value="Add game">
 </form>

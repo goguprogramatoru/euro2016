@@ -21,4 +21,21 @@ $( document ).ready(function() {
         $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
     });
 
+    $(function() {
+        $('.addGameForm').submit(function() {
+            // DO STUFF
+            var t1 = $('#in_team1').val()
+            var t2 = $('#in_team2').val()
+            if(t1==t2) {
+                $('#in_team1_group').addClass("has-error")
+                $('#in_team2_group').addClass("has-error")
+                $('#error_message').removeClass("hidden")
+                return false;
+            }
+            else {
+                return true;
+            }
+        });
+    });
+
 });
