@@ -4,7 +4,7 @@ $( document ).ready(function() {
         {
             paging: false,
             info: true,
-            "scrollX": true,
+            "scrollX": false,
             "scrollY": 500
         }
     );

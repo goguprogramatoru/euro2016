@@ -1,19 +1,25 @@
 @(users:List[String])
-User list:
-<table border="1">
-    <tr>
-        <td>Username</td>
-        <td>Action</td>
-    </tr>
-    @for(user <- users) {
+<table class="tbl display">
+    <thead>
         <tr>
-           <td>@user</td>
-           @if(user!="admin") {
-               <td><a href="@routes.Admin.deleteUser(user)">Delete</a></td>
-           }else {
-               <td>&nbsp;</td>
-           }
+            <td>Username</td>
+            <td>Action</td>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @for(user <- users) {
+            <tr>
+               <td>@user</td>
+               @if(user!="admin") {
+                   <td><a role="button" class="btn btn-danger" href="@routes.Admin.deleteUser(user)">Delete</a></td>
+               }else {
+                   <td>&nbsp;</td>
+               }
+            </tr>
+        }
+    </tbody>
 </table>
-<br>To create a new user, you need to generate an access token
+<br>
+<div class="alert alert-info" role="alert">
+    To create a new user, you need to generate an access token
+</div>

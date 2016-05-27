@@ -1,18 +1,24 @@
 @(users:List[(String,String)])
 Access tokens:
-<table border="1">
-    <tr>
-        <td>Username</td>
-        <td>Token</td>
-        <td>Action</td>
-    </tr>
-    @for(user <- users) {
+<table class="tbl display">
+    <thead>
         <tr>
-            <td>@user._1</td>
-            <td>@user._2</td>
-            <td><a href="@routes.Admin.deleteToken(user._1)">Delete</a></td>
+            <td>Username</td>
+            <td>Token</td>
+            <td>Action</td>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @for(user <- users) {
+            <tr>
+                <td>@user._1</td>
+                <td>@user._2</td>
+                <td><a role="button" class="btn btn-danger" href="@routes.Admin.deleteToken(user._1)">Delete</a></td>
+            </tr>
+        }
+    </tbody>
 </table>
 <br>
-<a href="@routes.Admin.createTokenInputPage()">Add user / Reset pass</a>
+<center>
+    <a role="button" class="btn btn-primary btn-block"  href="@routes.Admin.createTokenInputPage()">Add user / Reset pass</a>
+</center>
