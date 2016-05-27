@@ -159,7 +159,9 @@ object User extends Controller {
 	def stats() = UserAction{request =>
 		models.Stats.refresh()
 		val allUsers = datamappers.Users.getUserList().sorted.filter(_!="admin")
-		val allGames = datamappers.Games.getGames().sortBy(_.date)
+		val allGames = datamappers.Games.getGames()
+				.filterNot(game => game.team1Score == -1 || game.team2Score == -1)
+					.sortBy(_.date).reverse
 		val pivot = models.Stats.getUserGamePivot()
 		val page = views.html.user.stats.pivot(allUsers,allGames,pivot)
 		val userName = request.session.get("connectedUser").getOrElse("nope")
