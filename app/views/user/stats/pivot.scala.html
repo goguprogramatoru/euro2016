@@ -5,8 +5,10 @@
         <tr>
             <td>Game</td>
             @for(game <- allGames){
-                <td>
-                    @game.team1 - @game.team2
+                <td align="center">
+                    <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(game.team1))" title="@game.team1">
+                    @game.team1Score-@game.team2Score
+                    <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(game.team2))" title="@game.team2">
                 </td>
             }
         </tr>
