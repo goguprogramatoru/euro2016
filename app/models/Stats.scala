@@ -42,7 +42,6 @@ object Stats {
 				val winScore = game.team1Score + " - " + game.team2Score
 
 				val winLoose = if(betScore == winScore){nbParticipants/nbWinners - 1.0} else {-1.0}
-				println(betScore + " : "+winScore +" : "+winLoose)
 				usr -> winLoose
 			}).toMap
 			game.key -> tmp

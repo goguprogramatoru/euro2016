@@ -1,22 +1,22 @@
 @(allUsers:List[String], allGames:List[models.Game], pivot:Map[String,Map[String,Double]])
 
-<table class="tbl" class="display">
+<table class="tbl display">
     <thead>
         <tr>
             <td>Game</td>
-            @for(user <- allUsers){
-                <td>@user</td>
+            @for(game <- allGames){
+                <td>
+                    @game.team1 - @game.team2
+                </td>
             }
         </tr>
     </thead>
     <tbody>
-        @for(game <- allGames){
+        @for(user <- allUsers.sorted){
             <tr>
-                <td>
-                    @game.team1 - @game.team2
-                </td>
-                @for(user <- allUsers){
-                    <td style="background-color:
+                <td>@user</td>
+                @for(game <- allGames){
+                    <td bgcolor="
                         @{
                             val x = pivot.get(game.key).get.getOrElse(user,0.0)
                             if(x>0){
