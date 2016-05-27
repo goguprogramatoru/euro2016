@@ -4,6 +4,7 @@ import java.time.LocalTime
 
 import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
 import org.joda.time.{DateTimeZone, DateTime}
+import play.api.Play
 
 object WinningTeam {
 	def getWinningTeamOfUser(user:String):String = {
@@ -34,7 +35,7 @@ object WinningTeam {
 
 	def changeWinningTeam(user:String, team:String):Boolean = {
 
-		val etaString = datamappers.Settings.getSetting("winning_team_set_eta")
+		val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
 		val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
 		val eta = formatter.parseLocalDateTime(etaString)
 		val now = new DateTime(DateTimeZone.forOffsetHours(3)).toLocalDateTime

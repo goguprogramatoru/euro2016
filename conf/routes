@@ -18,9 +18,6 @@ POST    /admin/games/add                     controllers.Admin.addGame
 GET     /admin/games/delete/:gameKey         controllers.Admin.deleteGame(gameKey:String)
 GET     /admin/games/setScore/:gameKey       controllers.Admin.setGameScoreInputPage(gameKey:String)
 POST    /admin/games/setScore/:gameKey       controllers.Admin.setGameScore(gameKey:String)
-GET     /admin/viewSettings                  controllers.Admin.viewSettings()
-GET     /admin/setValue/:key                 controllers.Admin.changeSettingInputPage(key:String)
-POST    /admin/setValue/:key                 controllers.Admin.changeSetting(key:String)
 
 GET     /login                               controllers.Common.loginPage()
 POST    /login                               controllers.Common.loginHandler()

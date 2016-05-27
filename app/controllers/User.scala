@@ -41,7 +41,7 @@ object User extends Controller {
 		val userName = request.session.get("connectedUser").getOrElse("nope")
 		val userMenu = views.html.user.userMenu.render(userName,1)
 		val winningTeam = datamappers.WinningTeam.getWinningTeamOfUser(userName)
-		val etaString = datamappers.Settings.getSetting("winning_team_set_eta")
+		val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
 		val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 		val eta = formatter.parseLocalDateTime(etaString)
 		val now = new DateTime(DateTimeZone.forOffsetHours(3)).toLocalDateTime

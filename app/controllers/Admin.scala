@@ -167,31 +167,4 @@ object Admin extends Controller{
 				}
 			)
 	}
-
-	def viewSettings() = AdminAction{
-		val settings = datamappers.Settings.getSettings()
-
-		val menu = views.html.admin.adminMenu.render("admin",3)
-		val page = views.html.admin.settings.viewSettings(settings)
-		Ok(views.html.common.main(menu,page))
-	}
-
-	def changeSettingInputPage(key:String) = AdminAction{
-		val menu = views.html.admin.adminMenu.render("admin",3)
-		val page = views.html.admin.settings.setValue(key)
-		Ok(views.html.common.main(menu,page))
-	}
-
-	def changeSetting(key:String) = AdminAction{
-		implicit request =>
-			settingsInputForm.bindFromRequest().fold(
-				formWithErrors => {
-					Ok("Wrong input!")
-				},
-				settingsData => {
-					datamappers.Settings.update(key, settingsData.value)
-					Redirect(routes.Admin.viewSettings())
-				}
-			)
-	}
 }
