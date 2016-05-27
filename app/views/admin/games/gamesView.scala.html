@@ -24,7 +24,9 @@
                 <td>@game.team2Score</td>
                 <td>
                     <a role="button" class="btn btn-warning" href="@routes.Admin.setGameScoreInputPage(game.key)">Set final score</a>
-                    <a role="button" class="btn btn-danger" href="@routes.Admin.deleteGame(game.key)">Delete</a>
+                    <a role="button" class="btn btn-danger"  data-href="@routes.Admin.deleteGame(game.key)" data-toggle="modal" data-target="#confirm-delete">
+                        Delete
+                    </a>
                 </td>
             </tr>
         }
