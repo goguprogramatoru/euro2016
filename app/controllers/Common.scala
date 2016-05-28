@@ -40,6 +40,15 @@ object Common extends Controller{
 		Redirect(routes.Common.loginPage()).withNewSession
 	}
 
+	def error(errorText:String,redirect:String):Result = {
+		return Ok(
+			views.html.common.main(
+				null,
+				views.html.common.error(errorText,redirect)
+			)
+		)
+	}
+
 	def loginHandler() = Action{
 		implicit request =>
 
@@ -80,14 +89,14 @@ object Common extends Controller{
 
 		if(expired==false) {
 			if (datamappers.Users.tokenExists(userName, token) == false) {
-				NotFound("No valid token, ask the admin for a new one")
+				error("No valid token, ask the admin for a new one",null)
 			}
 			else {
 				Ok(views.html.common.createUserInput(userName))
 			}
 		}
 		else {
-			NotFound("Too late. Euro 2016 has started, you cannot register anymore")
+			error("Too late. Euro 2016 has started, so you cannot register anymore.",null)
 		}
 	}
 
@@ -105,14 +114,14 @@ object Common extends Controller{
 						createUserData.pass = tools.Security.md5(createUserData.pass)
 						val result = datamappers.Users.consumeToken(userName, token, createUserData.pass)
 						if (result == false) {
-							NotFound("Something wrong happened. Talk with the admin")
+							error("Something wrong happened. Talk with the admin.",null)
 						}
 						else {
 							Ok(views.html.common.createUserOutput())
 						}
 					}
 					else {
-						NotFound("Too late. Euro 2016 has started, you cannot register anymore")
+						error("Too late. Euro 2016 has started, so you cannot register anymore.",null)
 					}
 				}
 			)

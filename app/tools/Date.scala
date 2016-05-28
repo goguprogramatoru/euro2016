@@ -1,5 +1,7 @@
 package tools
 
+import org.joda.time.LocalDateTime
+
 import org.joda.time.{DateTimeZone, DateTime}
 import org.joda.time.format.DateTimeFormat
 
@@ -22,5 +24,10 @@ object Date {
 				false
 			}
 		}
+	}
+
+	def format(input:String):LocalDateTime = {
+		val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+		return formatter.parseLocalDateTime(input)
 	}
 }

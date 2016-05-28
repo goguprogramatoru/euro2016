@@ -29,35 +29,33 @@ object User extends Controller {
 		)(GameScoreData.apply)(GameScoreData.unapply)
 	)
 
+	def displayPage(request:Request[AnyContent], pageId:Int, page:Html):Result = {
+		val userName = request.session.get("connectedUser").getOrElse("nope")
+		val userMenu = views.html.user.userMenu.render(userName,pageId)
+		return Ok(views.html.common.main(userMenu,page))
+	}
 
 	def index = UserAction { request =>
-		val userName = request.session.get("connectedUser").getOrElse("nope")
-		val userMenu = views.html.user.userMenu.render(userName,0)
 		val indexPage = views.html.user.index.render()
-		Ok(views.html.common.main(userMenu,indexPage))
+		displayPage(request,0,indexPage)
 	}
 
 	def winningTeamInterface = UserAction { request =>
 		val userName = request.session.get("connectedUser").getOrElse("nope")
-		val userMenu = views.html.user.userMenu.render(userName,1)
 		val winningTeam = datamappers.WinningTeam.getWinningTeamOfUser(userName)
+
 		val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
-		val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-		val eta = formatter.parseLocalDateTime(etaString)
-		val now = new DateTime(DateTimeZone.forOffsetHours(3)).toLocalDateTime
-		val expired = if(now.isBefore(eta)){false} else {true}
+		val expired = tools.Date.isExpired(etaString)
 
 		val winningTeams = datamappers.WinningTeam.getWinningTeamOfAllUsers()
 
 		val page = views.html.user.winningteam.view.render(winningTeam,etaString, expired, winningTeams)
-		Ok(views.html.common.main(userMenu,page))
+		displayPage(request,1,page)
 	}
 
 	def setWinningTeamInterface = UserAction{request =>
-		val userName = request.session.get("connectedUser").getOrElse("nope")
-		val userMenu = views.html.user.userMenu.render(userName,1)
 		val page = views.html.user.winningteam.set.render(models.Countries.getList())
-		Ok(views.html.common.main(userMenu,page))
+		displayPage(request,1,page)
 	}
 
 	def setWinningTeam = UserAction{
@@ -65,7 +63,7 @@ object User extends Controller {
 			winningTeamInputForm.bindFromRequest().fold(
 				formWithErrors => {
 					println(request.body.asFormUrlEncoded.get("in_team").toString())
-					Ok("Wrong input!")
+					Common.error("Wrong input",routes.User.winningTeamInterface().absoluteURL())
 				},
 				winningTeamData => {
 					val userName = request.session.get("connectedUser").getOrElse("nope")
@@ -74,7 +72,7 @@ object User extends Controller {
 						Redirect(routes.User.winningTeamInterface())
 					}
 					else {
-						Ok("Too late!")
+						Common.error("Too late!",routes.User.winningTeamInterface().absoluteURL())
 					}
 				}
 			)
@@ -82,27 +80,22 @@ object User extends Controller {
 
 	def myScores = UserAction{request =>
 		val userName = request.session.get("connectedUser").getOrElse("nope")
-		val userMenu = views.html.user.userMenu.render(userName,2)
 		val allGames = datamappers.Games.getGames()
 		val myScores = datamappers.Games.getAllScoresOfUser(userName)
 		val page = views.html.user.myscores.view(allGames, myScores)
-		Ok(views.html.common.main(userMenu,page))
+		displayPage(request,2,page)
 	}
 
 
 	def setGameScoreInputPage(gameKey:String) = UserAction {request =>
 		val game = datamappers.Games.getGame(gameKey)
-		val userName = request.session.get("connectedUser").getOrElse("nope")
-		val menu = views.html.user.userMenu.render(userName,2)
 		val page = views.html.user.myscores.set(game.team1, game.team2)
-
-
 		val expired = tools.Date.isExpired(game.date)
 		if(expired == true){
-			Ok("Mars!")
+			Common.error("Ultima data de setare a scorului = data meciului - 10 minute",routes.User.myScores().url)
 		}
 		else {
-			Ok(views.html.common.main(menu, page))
+			displayPage(request,2,page)
 		}
 	}
 
@@ -110,7 +103,7 @@ object User extends Controller {
 		implicit request =>
 			gameScoreInputForm.bindFromRequest().fold(
 				formWithErrors => {
-					Ok("Wrong input!")
+					Common.error("Wrong input!",routes.User.myScores().absoluteURL())
 				},
 				gameScoreData => {
 					val userName = request.session.get("connectedUser").getOrElse("nope")
@@ -118,7 +111,7 @@ object User extends Controller {
 					val game = datamappers.Games.getGame(gameKey)
 					val expired = tools.Date.isExpired(game.date)
 					if(expired == true){
-						Ok("Mars!")
+						Common.error("Ultima data de setare a scorului = data meciului - 10 minute",routes.User.myScores().absoluteURL())
 					}
 					else {
 						datamappers.Games.setUserScore(userName, gameKey, gameScoreData.team1Score, gameScoreData.team2Score)
@@ -146,9 +139,7 @@ object User extends Controller {
 			val winSize = nbUsers * 1.0 / nbWinners
 			val reportSize = if(nbWinners > 0){0} else {nbUsers+1}
 			val page = views.html.user.myscores.other.render(otherPeopleScores, missingUsers, winnerScore, game.team1, game.team2, winSize, reportSize)
-			val userName = request.session.get("connectedUser").getOrElse("nope")
-			val menu = views.html.user.userMenu.render(userName,2)
-			Ok(views.html.common.main(menu,page))
+			displayPage(request,2,page)
 
 		}
 		else {
@@ -166,10 +157,7 @@ object User extends Controller {
 		val winningsPerUser = models.Stats.getUserStats(pivot)
 		val (totalWin,totalRemaining) = models.Stats.getWinOrReported(pivot)
 		val page = views.html.user.stats.pivot(allUsers,allGames,pivot,winningsPerUser,totalWin,totalRemaining)
-
-		val userName = request.session.get("connectedUser").getOrElse("nope")
-		val menu = views.html.user.userMenu.render(userName,3)
-		Ok(views.html.common.main(menu,page))
+		displayPage(request,3,page)
 	}
 
 }

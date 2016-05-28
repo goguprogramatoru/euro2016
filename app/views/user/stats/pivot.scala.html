@@ -1,4 +1,10 @@
 @(allUsers:List[String], allGames:List[models.Game], pivot:Map[String,Map[String,Double]], winningsPerUser:Map[String,Double], totalWinned:Double, totalRemaining:Double)
+@if(allGames.size == 0){
+    <div class="alert alert-info" role="alert">
+        Statisticile vor fi vizibile in momentul in care primul meci va fi validat.
+    </div>
+}
+@if(allGames.size > 0){
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <div class="row">
         <div class="col-md-6" id="piechart" style="height:350px">.col-md-6</div>
@@ -41,39 +47,40 @@
 
 
 
-<table class="tblPivot display">
-    <thead>
-        <tr>
-            <td>Game</td>
-            @for(game <- allGames){
-                <td align="center">
-                    <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(game.team1))" title="@game.team1">
-                    @game.team1Score-@game.team2Score
-                    <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(game.team2))" title="@game.team2">
-                </td>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @for(user <- allUsers.sorted){
+    <table class="tblPivot display">
+        <thead>
             <tr>
-                <td>@user</td>
+                <td>Game</td>
                 @for(game <- allGames){
-                    <td bgcolor="
-                        @{
-                            val x = pivot.get(game.key).get.getOrElse(user,0.0)
-                            if(x>0){
-                                "#eaffea"
-                            }
-                            else {
-                                "#ffeaea"
-                            }
-                        }
-                    ">
-                        @pivot.get(game.key).get.getOrElse(user,0.0)
+                    <td align="center">
+                        <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(game.team1))" title="@game.team1">
+                        @game.team1Score-@game.team2Score
+                        <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(game.team2))" title="@game.team2">
                     </td>
                 }
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @for(user <- allUsers.sorted){
+                <tr>
+                    <td>@user</td>
+                    @for(game <- allGames){
+                        <td bgcolor="
+                            @{
+                                val x = pivot.get(game.key).get.getOrElse(user,0.0)
+                                if(x>0){
+                                    "#eaffea"
+                                }
+                                else {
+                                    "#ffeaea"
+                                }
+                            }
+                        ">
+                            @pivot.get(game.key).get.getOrElse(user,0.0)
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
