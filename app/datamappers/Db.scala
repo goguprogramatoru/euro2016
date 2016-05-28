@@ -8,8 +8,6 @@ object Db {
 	val user = Play.current.configuration.getString("cassandra.user").getOrElse("cassandra")
 	val password = Play.current.configuration.getString("cassandra.password").getOrElse("cassandra")
 
-	println(user+"|"+password)
-
 	val cluster = Cluster.builder().addContactPoint("127.0.0.1")
 			.withCredentials(user, password)
 				.build()
