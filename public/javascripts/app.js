@@ -1,19 +1,34 @@
 $( document ).ready(function() {
 
+    $('.tblPivot').DataTable(
+        {
+            paging: false,
+            info: true,
+            "sScrollX": "100%",
+            "sScrollXInner": "100%",
+            keys: true,
+            "fixedColumns": true,
+            "scrollY": 500
+        }
+    );
+
     $('.tbl').DataTable(
         {
             paging: false,
             info: true,
-            "scrollX": false,
+            "sScrollX": "100%",
+            "sScrollXInner": "100%",
             "scrollY": 500
         }
     );
+
 
     $('.tblMyScores').DataTable(
         {
             paging: false,
             info: true,
-            "scrollX": false,
+            "sScrollX": "100%",
+            "sScrollXInner": "100%",
             "scrollY": 500,
             "order": [[ 0, "desc" ]]
         }
