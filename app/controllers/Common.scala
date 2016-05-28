@@ -75,11 +75,19 @@ object Common extends Controller{
 	}
 
 	def createUserInput(userName:String, token:String) = Action {
-		if(datamappers.Users.tokenExists(userName, token) == false){
-			NotFound("No valid token, ask the admin for a new one")
+		val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
+		val expired = tools.Date.isExpired(etaString)
+
+		if(expired==false) {
+			if (datamappers.Users.tokenExists(userName, token) == false) {
+				NotFound("No valid token, ask the admin for a new one")
+			}
+			else {
+				Ok(views.html.common.createUserInput(userName))
+			}
 		}
 		else {
-			Ok(views.html.common.createUserInput(userName))
+			NotFound("Too late. Euro 2016 has started, you cannot register anymore")
 		}
 	}
 
@@ -90,13 +98,21 @@ object Common extends Controller{
 					Redirect(routes.Common.createUserInput(userName,token))
 				},
 				createUserData => {
-					createUserData.pass = tools.Security.md5(createUserData.pass)
-					val result = datamappers.Users.consumeToken(userName,token,createUserData.pass)
-					if(result == false){
-						NotFound("Something wrong happened. Talk with the admin")
+					val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
+					val expired = tools.Date.isExpired(etaString)
+
+					if(expired==false) {
+						createUserData.pass = tools.Security.md5(createUserData.pass)
+						val result = datamappers.Users.consumeToken(userName, token, createUserData.pass)
+						if (result == false) {
+							NotFound("Something wrong happened. Talk with the admin")
+						}
+						else {
+							Ok(views.html.common.createUserOutput())
+						}
 					}
 					else {
-						Ok(views.html.common.createUserOutput())
+						NotFound("Too late. Euro 2016 has started, you cannot register anymore")
 					}
 				}
 			)

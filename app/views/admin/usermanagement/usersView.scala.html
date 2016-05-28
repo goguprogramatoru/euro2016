@@ -1,4 +1,4 @@
-@(users:List[String])
+@(users:List[String], expired:Boolean)
 <table class="tbl display">
     <thead>
         <tr>
@@ -12,9 +12,11 @@
                <td>@user</td>
                @if(user!="admin") {
                    <td>
-                       <a role="button" class="btn btn-danger" data-href="@routes.Admin.deleteUser(user)" data-toggle="modal" data-target="#confirm-delete">
-                           Delete
-                       </a>
+                       @if(expired==false) {
+                           <a role="button" class="btn btn-danger" data-href="@routes.Admin.deleteUser(user)" data-toggle="modal" data-target="#confirm-delete">
+                               Delete
+                           </a>
+                       }
                    </td>
                }else {
                    <td>&nbsp;</td>
@@ -27,3 +29,8 @@
 <div class="alert alert-info" role="alert">
     To create a new user, you need to generate an access token
 </div>
+@if(expired==true) {
+    <div class="alert alert-warning" role="alert">
+        Euro 2016 started, you cannot add / delete users anymore.
+    </div>
+}

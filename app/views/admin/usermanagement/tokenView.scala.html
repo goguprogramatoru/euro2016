@@ -1,14 +1,15 @@
-@(users:List[(String,String)])
-Access tokens:
-<table class="tbl display">
-    <thead>
-        <tr>
-            <td>Username</td>
-            <td>Token</td>
-            <td>Action</td>
-        </tr>
-    </thead>
-    <tbody>
+@(users:List[(String,String)], expired:Boolean)
+@if(expired==false) {
+    Access tokens:
+    <table class="tbl display">
+        <thead>
+            <tr>
+                <td>Username</td>
+                <td>Token</td>
+                <td>Action</td>
+            </tr>
+        </thead>
+        <tbody>
         @for(user <- users) {
             <tr>
                 <td>@user._1</td>
@@ -20,9 +21,16 @@ Access tokens:
                 </td>
             </tr>
         }
-    </tbody>
-</table>
-<br>
-<center>
-    <a role="button" class="btn btn-primary btn-block"  href="@routes.Admin.createTokenInputPage()">Add user / Reset pass</a>
-</center>
+        </tbody>
+    </table>
+    <br>
+    <center>
+        <a role="button" class="btn btn-primary btn-block" href="@routes.Admin.createTokenInputPage()">
+            Add user / Reset pass</a>
+    </center>
+}
+@if(expired==true) {
+    <div class="alert alert-warning" role="alert">
+        Euro 2016 started, you cannot add / delete users anymore.
+    </div>
+}

@@ -44,12 +44,6 @@ object Admin extends Controller{
 		)(GameScoreData.apply)(GameScoreData.unapply)
 	)
 
-	val settingsInputForm = Form(
-		mapping(
-			"in_val" -> nonEmptyText
-		)(SettingsData.apply)(SettingsData.unapply)
-	)
-
 	def index = AdminAction {request =>
 		val menu = views.html.admin.adminMenu.render("admin",-1)
 		val index = views.html.admin.adminIndex.render()
@@ -57,9 +51,18 @@ object Admin extends Controller{
 	}
 
 	def createTokenInputPage = AdminAction{
-		val menu = views.html.admin.adminMenu.render("admin",0)
-		val page = views.html.admin.usermanagement.createUserTokenInput.render()
-		Ok(views.html.common.main(menu,page))
+
+		val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
+		val expired = tools.Date.isExpired(etaString)
+
+		if(expired==false) {
+			val menu = views.html.admin.adminMenu.render("admin", 0)
+			val page = views.html.admin.usermanagement.createUserTokenInput.render()
+			Ok(views.html.common.main(menu, page))
+		}
+		else {
+			NotFound("You cannot add users anymore")
+		}
 	}
 
 	def createTokenResultPage = AdminAction{
@@ -70,11 +73,19 @@ object Admin extends Controller{
 					Ok("Wrong input!")
 				},
 				userTokenInputData => {
-					val token = scala.util.Random.alphanumeric.take(10).mkString
-					datamappers.Users.createToken(userTokenInputData.userName,token)
-					val page = views.html.admin.usermanagement.createUserTokenOutput(request.host,userTokenInputData.userName, token)
-					val menu = views.html.admin.adminMenu.render("admin",0)
-					Ok(views.html.common.main(menu,page))
+					val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
+					val expired = tools.Date.isExpired(etaString)
+
+					if(expired==false) {
+						val token = scala.util.Random.alphanumeric.take(10).mkString
+						datamappers.Users.createToken(userTokenInputData.userName, token)
+						val page = views.html.admin.usermanagement.createUserTokenOutput(request.host, userTokenInputData.userName, token)
+						val menu = views.html.admin.adminMenu.render("admin", 0)
+						Ok(views.html.common.main(menu, page))
+					}
+					else {
+						NotFound("You cannot add users anymore")
+					}
 				}
 			)
 	}
@@ -82,26 +93,48 @@ object Admin extends Controller{
 	def viewUsers = AdminAction{
 		val userList = datamappers.Users.getUserList()
 
+		val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
+		val expired = tools.Date.isExpired(etaString)
+
 		val menu = views.html.admin.adminMenu.render("admin",1)
-		val page = views.html.admin.usermanagement.usersView(userList)
+		val page = views.html.admin.usermanagement.usersView(userList, expired)
 		Ok(views.html.common.main(menu,page))
 	}
 
 	def deleteUser(userName:String) = AdminAction{
-		datamappers.Users.deleteUser(userName)
-		Redirect(routes.Admin.viewUsers())
+		val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
+		val expired = tools.Date.isExpired(etaString)
+
+		if(expired==false) {
+			datamappers.Users.deleteUser(userName)
+			Redirect(routes.Admin.viewUsers())
+		}
+		else {
+			NotFound("You cannot delete users anymore")
+		}
 	}
 
 	def viewTokens = AdminAction{
 		val userList = datamappers.Users.getUserOfTokens()
 		val menu = views.html.admin.adminMenu.render("admin",0)
-		val page = views.html.admin.usermanagement.tokenView(userList)
+
+		val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
+		val expired = tools.Date.isExpired(etaString)
+
+		val page = views.html.admin.usermanagement.tokenView(userList, expired)
 		Ok(views.html.common.main(menu,page))
 	}
 
 	def deleteToken(userName:String) = AdminAction{
-		datamappers.Users.deleteToken(userName)
-		Redirect(routes.Admin.viewTokens())
+		val etaString = Play.current.configuration.getString("euro2016.winningTeamSetEta").getOrElse("2016-06-10 20:00:00")
+		val expired = tools.Date.isExpired(etaString)
+
+		if(expired==false) {
+			datamappers.Users.deleteToken(userName)
+			Redirect(routes.Admin.viewTokens())
+		} else {
+			NotFound("You cannot add / delete users anymore")
+		}
 	}
 
 	def viewGames = AdminAction{
