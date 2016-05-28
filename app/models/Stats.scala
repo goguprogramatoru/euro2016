@@ -41,7 +41,7 @@ object Stats {
 				val betScore = allScores.getOrElse(usr +" | "+game.key,"-")
 				val winScore = game.team1Score + " - " + game.team2Score
 
-				val winLoose = if(betScore == winScore){nbParticipants/nbWinners - 1.0} else {-1.0}
+				val winLoose = if(betScore == winScore){nbParticipants*1.0/nbWinners} else {0.0}
 				usr -> winLoose
 			}).toMap
 			game.key -> tmp
@@ -49,4 +49,23 @@ object Stats {
 
 		return allWinLoose
 	}
+
+	def getUserStats(pivotStats:Map[String,Map[String,Double]]):Map[String,Double] = {
+		return pivotStats
+			.flatMap(_._2
+				.map(tpl => (tpl._1,tpl._2,"whatever"))) //i added whatever to avoid grouping by _._1 . specific to tpl2
+					.map(tpl => (tpl._1, tpl._2)
+			)
+				.groupBy(_._1).mapValues(_.map(_._2).sum)
+					.toMap[String,Double]
+
+	}
+
+	def getWinOrReported(pivotStats:Map[String,Map[String,Double]]):(Double,Double) = {
+		val total = allUsers.size * allGames.size * 1.0
+		val totalWinnings = pivotStats.flatMap(_._2.map(_._2)).foldLeft(0.0)(_+_)
+		val totalRemaining = total - totalWinnings
+		return (totalWinnings, totalRemaining)
+	}
+
 }

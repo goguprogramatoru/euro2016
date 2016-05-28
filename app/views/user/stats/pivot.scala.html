@@ -1,4 +1,45 @@
-@(allUsers:List[String], allGames:List[models.Game], pivot:Map[String,Map[String,Double]])
+@(allUsers:List[String], allGames:List[models.Game], pivot:Map[String,Map[String,Double]], winningsPerUser:Map[String,Double], totalWinned:Double, totalRemaining:Double)
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <div class="row">
+        <div class="col-md-6" id="piechart" style="height:350px">.col-md-6</div>
+        <div class="col-md-6" id="piechart2" style="height:350px">.col-md-6</div>
+    </div>
+
+    <script type="text/javascript">
+              google.charts.load('current', {'packages':['corechart']});
+              google.charts.setOnLoadCallback(drawChart);
+              function drawChart() {
+
+                  var data = google.visualization.arrayToDataTable([
+                      ['User', 'Castig'],
+                      @for(tpl <- winningsPerUser.toSeq.sortBy(_._2).reverse){
+                        [' @tpl._1',@tpl._2],
+                      }
+                  ]);
+
+                  var data2= google.visualization.arrayToDataTable([
+                      ['Category', 'RON'],
+                      ['Castigat',@totalWinned],
+                      ['Reportat',@totalRemaining],
+                  ]);
+
+                  var options = {
+                      title: 'Castiguri per jucator',
+                      pieHole: 0.4,
+                      chartArea:{left:20,top:0,width:'90%',height:'90%'},
+                      legend:{position: 'bottom', textStyle: {color: 'black', fontSize: 10}}
+                  };
+
+                  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+                  var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
+
+                  chart.draw(data, options);
+                  chart2.draw(data2, options);
+              }
+    </script>
+
+
+
 
 <table class="tblPivot display">
     <thead>

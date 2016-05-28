@@ -163,7 +163,10 @@ object User extends Controller {
 				.filterNot(game => game.team1Score == -1 || game.team2Score == -1)
 					.sortBy(_.date).reverse
 		val pivot = models.Stats.getUserGamePivot()
-		val page = views.html.user.stats.pivot(allUsers,allGames,pivot)
+		val winningsPerUser = models.Stats.getUserStats(pivot)
+		val (totalWin,totalRemaining) = models.Stats.getWinOrReported(pivot)
+		val page = views.html.user.stats.pivot(allUsers,allGames,pivot,winningsPerUser,totalWin,totalRemaining)
+
 		val userName = request.session.get("connectedUser").getOrElse("nope")
 		val menu = views.html.user.userMenu.render(userName,3)
 		Ok(views.html.common.main(menu,page))
