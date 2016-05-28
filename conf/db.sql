@@ -23,11 +23,6 @@ CREATE TABLE games (
   team2_score int
 );
 
-CREATE TABLE settings (
-  key varchar PRIMARY KEY,
-  val varchar
-);
-
 CREATE TABLE user_scores(
   user_name VARCHAR,
   game_key VARCHAR,
@@ -38,4 +33,12 @@ CREATE TABLE user_scores(
 
 INSERT INTO users (user_name, password) VALUES ('admin','ACC8C9FD44646847FA77EC3C22EE7F50');    //SoccerPeanuts
 
-INSERT INTO settings (key, val) VALUES ('winning_team_set_eta','2016-06-10 20:00:00')
+#TO CHANGE THE PASSWORD:
+
+
+#Change the authenticator option in the cassandra.yaml file to PasswordAuthenticator.
+#By default, the authenticator option is set to AllowAllAuthenticator.
+#authenticator: PasswordAuthenticator
+#restart server
+#connect to client with defaults: ./cqlsh -u cassandra -p cassandra
+ALTER USER cassandra WITH PASSWORD 'test';
