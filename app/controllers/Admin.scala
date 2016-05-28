@@ -124,19 +124,25 @@ object Admin extends Controller{
 					Ok("Wrong input!")
 				},
 				gameAddData => {
-					val token = scala.util.Random.alphanumeric.take(10).mkString
-					val success = datamappers.Games.insertGame(
-						gameAddData.key,
-						gameAddData.step,
-						gameAddData.date,
-						gameAddData.team1,
-						gameAddData.team2
-					)
-					if(success == false){
-						Ok("Failed. Game with the same key already exists")
+
+					val isDateValid = tools.Date.isValid(gameAddData.date)
+					if(isDateValid == true) {
+						val success = datamappers.Games.insertGame(
+							gameAddData.key,
+							gameAddData.step,
+							gameAddData.date,
+							gameAddData.team1,
+							gameAddData.team2
+						)
+						if (success == false) {
+							Ok("Failed. Game with the same key already exists")
+						}
+						else {
+							Redirect(routes.Admin.viewGames())
+						}
 					}
 					else {
-						Redirect(routes.Admin.viewGames())
+						BadRequest("Date not valid")
 					}
 				}
 			)

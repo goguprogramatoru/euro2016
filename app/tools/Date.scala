@@ -10,4 +10,17 @@ object Date {
 		val eta = formatter.parseLocalDateTime(date)
 		return if(now.isBefore(eta.minusMinutes(10))){false} else {true}
 	}
+
+	def isValid(date:String):Boolean = {
+		val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
+		return try{
+			val eta = formatter.parseLocalDateTime(date)
+			true
+		}
+		catch{
+			case e:IllegalArgumentException => {
+				false
+			}
+		}
+	}
 }
