@@ -76,7 +76,7 @@
                                 }
                             }
                         ">
-                            @pivot.get(game.key).get.getOrElse(user,0.0)
+                            @(math.round(pivot.get(game.key).get.getOrElse(user,0.0)*100)/100.0)
                         </td>
                     }
                 </tr>
