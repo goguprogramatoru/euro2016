@@ -72,7 +72,9 @@
         <tbody>
             @for(user <- allUsers.sorted){
                 <tr>
-
+                    @if(user=="nicu"){
+                        <td>Nicu @Seq("Barosanu","Boss de Boss","Cuceritoru","de aur","de la Drobeta","Seksosu","Valorosu")(scala.util.Random.nextInt(7))</td>
+                    }
                     @if(user!="nicu") {
                         <td>@user</td>
                     }
