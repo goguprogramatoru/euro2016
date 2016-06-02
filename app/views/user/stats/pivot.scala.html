@@ -6,45 +6,54 @@
 }
 @if(allGames.size > 0){
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <div class="row">
-        <div class="col-md-6" id="piechart" style="height:350px">.col-md-6</div>
-        <div class="col-md-6" id="piechart2" style="height:350px">.col-md-6</div>
-    </div>
+    @if(winningsPerUser.toSeq.map(_._2).foldLeft(0.0)(_+_) > 0.0) {
+        <div class="row">
+            <div class="col-md-6" id="piechart" style="height:350px">Reported per user chart</div>
+            <div class="col-md-6" id="piechart2" style="height:350px">Reported / Wins chart</div>
+        </div>
 
-    <script type="text/javascript">
-              google.charts.load('current', {'packages':['corechart']});
-              google.charts.setOnLoadCallback(drawChart);
-              function drawChart() {
+        <script type="text/javascript">
+                  google.charts.load('current', {'packages':['corechart']});
+                  google.charts.setOnLoadCallback(drawChart);
+                  function drawChart() {
 
-                  var data = google.visualization.arrayToDataTable([
-                      ['User', 'Castig'],
-                      @for(tpl <- winningsPerUser.toSeq.sortBy(_._2).reverse){
-                        [' @tpl._1',@tpl._2],
-                      }
-                  ]);
+                      var data = google.visualization.arrayToDataTable([
+                          ['User', 'Castig'],
+                          @for(tpl <- winningsPerUser.toSeq.sortBy(_._2).reverse){
+                            [' @tpl._1',@tpl._2],
+                          }
+                      ]);
 
-                  var data2= google.visualization.arrayToDataTable([
-                      ['Category', 'RON'],
-                      ['Castigat',@totalWinned],
-                      ['Reportat',@totalRemaining],
-                  ]);
+                      var data2= google.visualization.arrayToDataTable([
+                          ['Category', 'RON'],
+                          ['Castigat',@totalWinned],
+                          ['Reportat',@totalRemaining],
+                      ]);
 
-                  var options = {
-                      title: 'Castiguri per jucator',
-                      pieHole: 0.4,
-                      chartArea:{left:20,top:0,width:'90%',height:'90%'},
-                      legend:{position: 'bottom', textStyle: {color: 'black', fontSize: 10}}
-                  };
+                      var options = {
+                          title: 'Castiguri per jucator',
+                          pieHole: 0.4,
+                          chartArea:{left:20,top:0,width:'90%',height:'90%'},
+                          legend:{position: 'bottom', textStyle: {color: 'black', fontSize: 10}}
+                      };
 
-                  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-                  var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
+                      var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+                      var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
 
-                  chart.draw(data, options);
-                  chart2.draw(data2, options);
-              }
-    </script>
-
-
+                      chart.draw(data, options);
+                      chart2.draw(data2, options);
+                  }
+        </script>
+    }
+    @if(winningsPerUser.toSeq.map(_._2).foldLeft(0.0)(_+_) == 0.0) {
+        <div class="alert alert-info">
+            Au fost reportati pt campioana: @(allGames.size*allUsers.size) RON
+        </div>
+        <div class="alert alert-warning">
+            Toti sunteti niste pierzatori!<br>
+            <img src="@routes.Assets.at("images/easterEggs/looser.jpg")" width="100"/>
+        </div>
+    }
 
 
     <table class="tblPivot display">
@@ -63,7 +72,10 @@
         <tbody>
             @for(user <- allUsers.sorted){
                 <tr>
-                    <td>@user</td>
+
+                    @if(user!="nicu") {
+                        <td>@user</td>
+                    }
                     @for(game <- allGames){
                         <td bgcolor="
                             @{
