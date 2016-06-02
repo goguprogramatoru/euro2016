@@ -15,6 +15,7 @@ object Stats {
 	def refresh() = {
 		val now = new DateTime(DateTimeZone.forOffsetHours(3)).toLocalDateTime
 		if(now.minusMinutes(1).isAfter(lastRefresh)) {	//spammers protect
+			lastRefresh = now
 			allUsers = datamappers.Users.getUserList().filter(_ != "admin")
 			allGames = datamappers.Games.getGames()
 			allScores = datamappers.Games.getAllScores()
