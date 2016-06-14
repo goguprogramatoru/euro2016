@@ -62,7 +62,6 @@ object User extends Controller {
 		implicit request =>
 			winningTeamInputForm.bindFromRequest().fold(
 				formWithErrors => {
-					println(request.body.asFormUrlEncoded.get("in_team").toString())
 					Common.error("Wrong input",routes.User.winningTeamInterface().absoluteURL())
 				},
 				winningTeamData => {
@@ -132,7 +131,7 @@ object User extends Controller {
 
 			val allUsers = datamappers.Users.getUserList()
 
-			val nbUsers = allUsers.size - 2 //without himself and without admin
+			val nbUsers = allUsers.size - 1 //without admin
 			val participants = otherPeopleScores.map(x => x._1).toSet
 			val missingUsers = allUsers.filter(usr => !participants.contains(usr)).filter(_!="admin")
 
@@ -156,7 +155,12 @@ object User extends Controller {
 		val pivot = models.Stats.getUserGamePivot()
 		val winningsPerUser = models.Stats.getUserStats(pivot)
 		val (totalWin,totalRemaining) = models.Stats.getWinOrReported(pivot)
-		val page = views.html.user.stats.pivot(allUsers,allGames,pivot,winningsPerUser,totalWin,totalRemaining)
+
+		val shameScores = models.Stats.getShameScore()
+
+		//println(pivot.keys.mkString(","))
+
+		val page = views.html.user.stats.pivot(allUsers,allGames,pivot,winningsPerUser,totalWin,totalRemaining, shameScores)
 		displayPage(request,3,page)
 	}
 

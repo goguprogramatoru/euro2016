@@ -51,20 +51,57 @@ object Stats {
 		return allWinLoose
 	}
 
+	def getShameScore():Map[String,Double] = {
+
+		val allWinLoose:Map[String,Map[String,Double]] = allGames
+			.filterNot(game => game.team1Score == -1 || game.team2Score == -1)
+			    .map(game =>
+		{
+			val tmp:Map[String,Double] = allUsers.map(usr =>
+			{
+				val betScore = allScores.getOrElse(usr +" | "+game.key,"-")
+				val winScore = game.team1Score + " - " + game.team2Score
+
+				val betScores = betScore.split(" - ")
+				if(betScores.size<2){
+					usr -> 3.0
+				}
+				else {
+					val betScore1 = betScores(0).toInt
+					val betScore2 = betScores(1).toInt
+					val shame = math.abs(betScore1 - game.team1Score) + math.abs(betScore2 - game.team2Score).toDouble
+					//println(betScore(0)+"|"+game.team1Score+"|"+shame)
+					//println(betScore2+"|"+game.team2Score+"|"+shame)
+					usr -> shame
+				}
+			}).toMap
+			game.key -> tmp
+		}).toMap
+
+		return this.getUserStats(allWinLoose)
+
+	}
+
 	def getUserStats(pivotStats:Map[String,Map[String,Double]]):Map[String,Double] = {
 		return pivotStats
 			.flatMap(_._2
 				.map(tpl => (tpl._1,tpl._2,"whatever"))) //i added whatever to avoid grouping by _._1 . specific to tpl2
 					.map(tpl => (tpl._1, tpl._2)
 			)
-				.groupBy(_._1).mapValues(_.map(_._2).sum)
+				.groupBy(_._1)
+					.mapValues(_.map(_._2).sum)
+						//.map(x=> (x._1,math.round(x._2*100)/100.0))
 					.toMap[String,Double]
 
 	}
 
 	def getWinOrReported(pivotStats:Map[String,Map[String,Double]]):(Double,Double) = {
-		val total = allUsers.size * allGames.size * 1.0
-		val totalWinnings = pivotStats.flatMap(_._2.map(_._2)).foldLeft(0.0)(_+_)
+		val total = allUsers.size * allGames.filterNot(game => game.team1Score == -1 || game.team2Score == -1).size * 1.0
+		val totalWinnings = math.round(
+			pivotStats
+				.flatMap(_._2.map(_._2))
+					.foldLeft(0.0)(_+_)
+			* 100) /100.0
 		val totalRemaining = total - totalWinnings
 		return (totalWinnings, totalRemaining)
 	}

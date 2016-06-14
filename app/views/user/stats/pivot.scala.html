@@ -1,4 +1,4 @@
-@(allUsers:List[String], allGames:List[models.Game], pivot:Map[String,Map[String,Double]], winningsPerUser:Map[String,Double], totalWinned:Double, totalRemaining:Double)
+@(allUsers:List[String], allGames:List[models.Game], pivot:Map[String,Map[String,Double]], winningsPerUser:Map[String,Double], totalWinned:Double, totalRemaining:Double, shameScores:Map[String,Double])
 @if(allGames.size == 0){
     <div class="alert alert-info" role="alert">
         Statisticile vor fi vizibile in momentul in care primul meci va fi validat.
@@ -59,12 +59,13 @@
     <table class="tblPivot display">
         <thead>
             <tr>
-                <td>Game</td>
+                <td>User \ Game</td>
                 @for(game <- allGames){
-                    <td align="center">
+                    <td nowrap>
                         <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(game.team1))" title="@game.team1">
-                        @game.team1Score-@game.team2Score
+                        @game.team1Score<br>
                         <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(game.team2))" title="@game.team2">
+                        @game.team2Score
                     </td>
                 }
             </tr>
@@ -97,4 +98,31 @@
             }
         </tbody>
     </table>
+    <div class="alert alert-warning" role="alert">
+        Indexul rusinii (scor mai mare -> rusine mai mare).<br>
+        Se calculeaza ca diferenta intre scorul real si scorul pariat.<br>
+        Cand nu ai pariat, se penalizeaza cu 3 puncte.
+    </div>
+
+    <table class="tblPivot display">
+        <thead>
+            <tr>
+                <td>User</td>
+                <td>Indexul rusinii</td>
+            </tr>
+        </thead>
+        <tbody>
+            @for(shameElement <- shameScores){
+                <tr>
+                    <td>
+                        @shameElement._1
+                    </td>
+                    <td>
+                        @shameElement._2
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
 }
