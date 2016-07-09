@@ -206,4 +206,20 @@ object Admin extends Controller{
 				}
 			)
 	}
+
+	def viewChampion() = AdminAction{
+
+		val champion = datamappers.Champion.getChampion()
+
+		val menu = views.html.admin.adminMenu.render("admin",3)
+		val page = views.html.admin.champion.view(champion,models.Countries.getList())
+		Ok(views.html.common.main(menu,page))
+	}
+
+	def setChampion(inChampion:String) = AdminAction{
+		val champion = if(inChampion=="None"){""} else {inChampion}
+		datamappers.Champion.setChampion(champion)
+		Redirect(routes.Admin.viewChampion())
+	}
+
 }

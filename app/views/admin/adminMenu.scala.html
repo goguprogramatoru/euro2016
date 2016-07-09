@@ -18,6 +18,7 @@
                 <li @if(selected == 0){class="active"}><a href="@routes.Admin.viewTokens()">Access tokens<span class="sr-only">(current)</span></a></li>
                 <li @if(selected == 1){class="active"}><a href="@routes.Admin.viewUsers()">Users</a></li>
                 <li @if(selected == 2){class="active"}><a href="@routes.Admin.viewGames()">Games</a></li>
+                <li @if(selected == 3){class="active"}><a href="@routes.Admin.viewChampion()">Champion</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="@routes.Common.logout()">Logout (@username)</a></li>

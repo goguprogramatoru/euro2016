@@ -1,0 +1,21 @@
+@(champion:String, teams:List[String])
+<div class="alert alert-info" role="alert">
+    @if(champion.length==0){
+        There is no champion selected
+    }
+    @if(champion.length>0) {
+        The champion is: @champion.capitalize  <img src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(champion))"/>
+    }
+</div>
+Change the champion:
+<form method="post" id="frm">
+    @for(team <- teams) {
+        <a href="@routes.Admin.setChampion(team)" class="btn btn-default team-select" id="btn@team" style="width: 150px; margin:10px">
+            @team.capitalize
+        <img id="btnimg@team" src="@routes.Assets.at("images/flags/"+Countries.getPicturePath(team))"/>
+        </a>
+    }
+    <a href="@routes.Admin.setChampion("None")" class="btn btn-default team-select" id="btn_none" style="width: 150px; margin:10px">
+        None
+    </a>
+</form>

@@ -33,6 +33,13 @@ CREATE TABLE user_scores(
 
 INSERT INTO users (user_name, password) VALUES ('admin','ACC8C9FD44646847FA77EC3C22EE7F50');    //SoccerPeanuts
 
+CREATE TABLE kv(
+  key_data VARCHAR PRIMARY KEY,
+  value_data VARCHAR
+);
+
+INSERT INTO kv (key_data, value_data) VALUES ('champion','');
+
 #TO CHANGE THE PASSWORD:
 
 
